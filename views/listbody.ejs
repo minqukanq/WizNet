@@ -1,0 +1,37 @@
+<table data-role="table" data-mode="columntoggle"
+	class="table ui-responsive" data-column-btn-text="칼럼선택" id="myTable">
+	<thead>
+		<tr>
+			<th>센서번호</th>
+			<th data-priority="1">일자</th>
+			<th data-priority="2">시각</th>
+			<th data-priority="3">PM 0.1</th>
+			<th data-priority="4">PM 10</th>
+			<th data-priority="5">PM 25</th>
+			<th data-priority="6">온도</th>
+		</tr>
+	</thead>
+	<tbody>
+		<%  
+			//	시간을 시:분 으로 나누어 한개씩만 표시한다.
+			var t = ""
+			list.forEach(function(item){ 
+			if(t != item.PM25_TIME.substr(0,5)) {
+		
+		%>
+		<tr>
+			<td><%- item.PM25_NO %></td>
+			<td><%- item.PM25_DATE %></td>
+			<td><%- item.PM25_TIME %></td>
+			<td><%- item.PM25_01 %></td>
+			<td><%- item.PM25_10 %></td>
+			<td><%- item.PM25_25 %></td>
+			<td><%- item.DS_TEMP %></td>
+		</tr>
+		<% 
+			}
+			t = item.PM25_TIME.substr(0,5)
+		}) 
+		%>
+	</tbody>
+</table>

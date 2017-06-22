@@ -1,0 +1,135 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<% include ../public/include/mobileHeader.html %>
+<script src="http://mbostock.github.com/d3/d3.js"></script>
+<script src="/d3js/gauge.js"></script>
+
+<style>
+body {
+	font: 10px arial;
+}
+tr, th, td {
+	border: 1px solid #d6d6d6;
+	vertical-align: middle;
+}
+
+th {
+	text-align: center;
+}
+
+.t1 {
+	width: 50px;
+}
+</style>
+<script>
+	$(document).ready(function() {
+		createGauges();
+		updateGauges();
+		setInterval(updateGauges, 10000);
+	})
+</script>
+</head>
+<body>
+	<div data-role="page" id="pageone">
+		<div data-role="header">
+			<% include	../public/include/pageHeader.html %>
+		</div>
+		<div data-role="main" class="ui-content">
+			<div class="row">
+				<div class="col-md-12">
+				 <button class="ui-btn" id='curTime'>현재시각 미세먼지</button>
+				</div>
+			</div>
+			<div class="row">
+				<span class="col-md-3" id="pm25_01GaugeContainer"></span> 
+				<span class="col-md-3" id="pm25_25GaugeContainer"></span>
+				<span class="col-md-3" id="pm25_10GaugeContainer"></span>
+				<span class="col-md-3" id="ds_tempGaugeContainer"></span>
+			</div>
+		</div>
+		<div class="container-fluid">
+		<% include info_tview.ejs %>
+		</div>
+		<div data-role="footer"><% include ../public/include/pageFooter.html %></div>
+	</div>
+</body>
+
+<script>
+	var gauges = [];
+
+	function createGauge(name, label, min, max) {
+		var config = {
+			size : 200,
+			label : label,
+			min : undefined != min ? min : 0,
+			max : undefined != max ? max : 100,
+			minorTicks : 5
+		}
+
+		var range = config.max - config.min;
+		config.yellowZones = [ {
+			from : config.min + range * 0.75,
+			to : config.min + range * 0.9
+		} ];
+		config.redZones = [ {
+			from : config.min + range * 0.9,
+			to : config.max
+		} ];
+
+		gauges[name] = new Gauge(name + "GaugeContainer", config);
+		gauges[name].render();
+	}
+
+	function createGauges() {
+		createGauge("pm25_01", "초미세(0.1): ㎍/㎥", 0, 80);
+		createGauge("pm25_25", "미세(2.5): ㎍/㎥", 0, 100);
+		createGauge("pm25_10", "황사급(10): ㎍/㎥", 0, 150);
+		createGauge("ds_temp", "기온 ℃", 0, 50);
+		//createGauge("test", "Test", -50, 50 );
+	}
+
+	// 게이지 다시그리기
+	function updateGauges() {
+		$.ajax({
+
+			type : 'GET',
+			url : '/pm25/getlast',
+			dataType : 'json',
+			success : function(data) {
+				if (data) {
+					gauges['pm25_01'].redraw(data.PM25_01);
+					gauges['pm25_10'].redraw(data.PM25_10);
+					gauges['pm25_25'].redraw(data.PM25_25);
+					gauges['ds_temp'].redraw(data.DS_TEMP);
+					$(curTime).text(
+							data.PM25_DATE + ',' + data.PM25_TIME
+									+ ' 현재 미세먼지, 온도 현황');
+
+					$(".pm25_1").css("background-color","white")
+					$(".pm25_2").css("background-color","white")
+					$(".pm25_3").css("background-color","white")
+					$(".pm25_4").css("background-color","white")
+					
+					$(".pm10_1").css("background-color","white")
+					$(".pm10_2").css("background-color","white")
+					$(".pm10_3").css("background-color","white")
+					$(".pm10_4").css("background-color","white")
+					
+					if(data.PM25_25 < 16 ) $(".pm25_1").css("background-color","#33FF66");
+					else if(data.PM25_25 < 51 ) $(".pm25_2").css("background-color","#FFFF66");
+					else if(data.PM25_25 < 101 ) $(".pm25_3").css("background-color","#FF6633");
+					else $(".pm25_4").css("background-color","red");
+
+					if(data.PM25_10 < 31 ) $(".pm10_1").css("background-color","#33FF66");
+					else if(data.PM25_10 < 81 ) $(".pm10_2").css("background-color","#FFFF66");
+					else if(data.PM25_10 < 151 ) $(".pm10_3").css("background-color","#FF6633");
+					else $(".pm10_4").css("background-color","red");
+					
+				}
+			}
+		})
+	}
+</script>
+
+</html>
