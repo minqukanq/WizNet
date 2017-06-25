@@ -20,14 +20,6 @@ boolean httpRequest(String message)
     client.println("Connection: close");
     client.println();
 
-    // note the time that the connection was made
-
-    //    String rxMsg = "";
-    //    while (client.available()) {
-    //      char c = client.read();
-    //      rxMsg += c;
-    //    }
-    //    Serial.println(rxMsg);
     Serial.println("Request OK");
     lastConnectionTime = millis();
   }

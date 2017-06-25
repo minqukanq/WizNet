@@ -21,7 +21,6 @@ int reqNotCount = 0 ; // 서버 전송에 실패한 시각 카운트
 unsigned long lastConnectionTime = 0;         // last time you connected to the server, in milliseconds
 const unsigned long postingInterval = 5 * 1000; // 업데이트 시간 설정, 5(*1000) 초
 
-//unsigned long previousMillis;
 bool showdot = false;
 
 // Initialize the WiFi client object
@@ -75,8 +74,6 @@ byte readCount = 0;
 
 bool ledState = LOW;
 
-//SoftwareSerial Serial5(2, 3) ;
-//Serial Serial5;
 TM1637Display display(CLK, DIO);
 
 void setup() {
@@ -104,6 +101,7 @@ void loop() {
   display.dotShow(digitalRead(LED_BUILTIN));
   digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
 
+  // 데이터 수신이 있을때만
   if ( digitalRead(TRIGGER_PIN) == LOW ) {
     //  Serial.print("Sensor Read...");
     //  Serial.println(readCount + 1);
@@ -152,8 +150,8 @@ void loop() {
         pmValue[k] = 0;
       }
     }
+    serverUpdate();
   }
-  serverUpdate();
   delay(5000);
 }
 
