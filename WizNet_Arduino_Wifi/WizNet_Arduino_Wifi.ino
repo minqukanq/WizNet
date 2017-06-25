@@ -1,7 +1,4 @@
 #include "WizFi310.h"
-
-// WizNetSampe.h 파일에 유효한 WiFi 정보와 서버 Ip 정보를 입력 후 
-// WizNet.h 이름으로 변경 후 컴파일
 #include "WizNet.h"
 
 #include <TM1637Display.h> // 4Bit 시계 FND를 사용하기 위한 라이브러리 
@@ -22,7 +19,7 @@ float temp3231;
 int reqNotCount = 0 ; // 서버 전송에 실패한 시각 카운트
 
 unsigned long lastConnectionTime = 0;         // last time you connected to the server, in milliseconds
-const unsigned long postingInterval = 5*1000; // 업데이트 시간 설정, 5(*1000) 초
+const unsigned long postingInterval = 5 * 1000; // 업데이트 시간 설정, 5(*1000) 초
 
 //unsigned long previousMillis;
 bool showdot = false;
@@ -107,56 +104,56 @@ void loop() {
   display.dotShow(digitalRead(LED_BUILTIN));
   digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
 
-  //  if ( digitalRead(TRIGGER_PIN) == LOW ) {
-  //  Serial.print("Sensor Read...");
-  //  Serial.println(readCount + 1);
-  if (readCount == 0) {
-    for (int k = 0 ; k < 3 ; k++) {
-      tmp_max[k] =  MAX_PM;
-      tmp_min[k] = MIN_PM;
-    }
-  }
-
-  //  Serial.println("PM Read");
-  if (PM7003_read()) {
-    tmp_max[PM01_0] = max(PM7003S.concPM1_0_CF1, tmp_max[PM01_0]);
-    tmp_max[PM10_0] = max(PM7003S.concPM10_0_CF1, tmp_max[PM10_0]);
-    tmp_max[PM25_0] = max(PM7003S.concPM2_5_CF1, tmp_max[PM25_0]);
-
-    tmp_min[PM01_0] = min(PM7003S.concPM1_0_CF1, tmp_min[PM01_0]);
-    tmp_min[PM10_0] = min(PM7003S.concPM10_0_CF1, tmp_min[PM10_0]);
-    tmp_min[PM25_0] = min(PM7003S.concPM2_5_CF1, tmp_min[PM25_0]);
-
-    pmValue[PM01_0] += PM7003S.concPM1_0_CF1;
-    pmValue[PM10_0] += PM7003S.concPM10_0_CF1;
-    pmValue[PM25_0] += PM7003S.concPM2_5_CF1;
-
-    display.write(dispPmValue[readCount % 3] % 10, 3);
-    display.write(dispPmValue[readCount % 3] / 10, 2);
-    display.write(intPmName[readCount % 3] % 10, 1);
-    display.write(intPmName[readCount % 3] / 10, 0);
-
-
-    readCount++;
-  }
-
-
-  if (readCount % MEAN_NUMBER == 0) {
-
-    for (int k = 0 ; k < 3 ; k++) {
-      pmValue[k] = ((pmValue[k] - tmp_max[k] - tmp_min[k]) / (MEAN_NUMBER - 2));
+  if ( digitalRead(TRIGGER_PIN) == LOW ) {
+    //  Serial.print("Sensor Read...");
+    //  Serial.println(readCount + 1);
+    if (readCount == 0) {
+      for (int k = 0 ; k < 3 ; k++) {
+        tmp_max[k] =  MAX_PM;
+        tmp_min[k] = MIN_PM;
+      }
     }
 
-    delay(1000);
-    readCount = 0 ;
-    for (int k = 0 ; k < 3; k++) {
-      //        delay(1000);
-      dispPmValue[k] = pmValue[k] ;
-      pmValue[k] = 0;
+    //  Serial.println("PM Read");
+    if (PM7003_read()) {
+      tmp_max[PM01_0] = max(PM7003S.concPM1_0_CF1, tmp_max[PM01_0]);
+      tmp_max[PM10_0] = max(PM7003S.concPM10_0_CF1, tmp_max[PM10_0]);
+      tmp_max[PM25_0] = max(PM7003S.concPM2_5_CF1, tmp_max[PM25_0]);
+
+      tmp_min[PM01_0] = min(PM7003S.concPM1_0_CF1, tmp_min[PM01_0]);
+      tmp_min[PM10_0] = min(PM7003S.concPM10_0_CF1, tmp_min[PM10_0]);
+      tmp_min[PM25_0] = min(PM7003S.concPM2_5_CF1, tmp_min[PM25_0]);
+
+      pmValue[PM01_0] += PM7003S.concPM1_0_CF1;
+      pmValue[PM10_0] += PM7003S.concPM10_0_CF1;
+      pmValue[PM25_0] += PM7003S.concPM2_5_CF1;
+
+      display.write(dispPmValue[readCount % 3] % 10, 3);
+      display.write(dispPmValue[readCount % 3] / 10, 2);
+      display.write(intPmName[readCount % 3] % 10, 1);
+      display.write(intPmName[readCount % 3] / 10, 0);
+
+
+      readCount++;
+    }
+
+
+    if (readCount % MEAN_NUMBER == 0) {
+
+      for (int k = 0 ; k < 3 ; k++) {
+        pmValue[k] = ((pmValue[k] - tmp_max[k] - tmp_min[k]) / (MEAN_NUMBER - 2));
+      }
+
+      delay(1000);
+      readCount = 0 ;
+      for (int k = 0 ; k < 3; k++) {
+        //        delay(1000);
+        dispPmValue[k] = pmValue[k] ;
+        pmValue[k] = 0;
+      }
     }
   }
   serverUpdate();
-
   delay(5000);
 }
 

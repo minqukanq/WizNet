@@ -10,6 +10,6 @@
 
 ## WizNet WiFi 모듈
 
-[아두이노 소스] (https://github.com/callor/WizNet/tree/master/WizNet_WiFI_Arduino)
+[아두이노 소스] (https://github.com/callor/WizNet/tree/master/WizNet_Arduino_Wifi)
 
 
