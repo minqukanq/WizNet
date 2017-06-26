@@ -79,10 +79,10 @@ TM1637Display display(CLK, DIO);
 void setup() {
 
   // display clear
-  display.write(3, 3);
-  display.write(2, 2);
-  display.write(1, 1);
-  display.write(0, 0);
+  display.write(8, 3);
+  display.write(8, 2);
+  display.write(8, 1);
+  display.write(8, 0);
 
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(TRIGGER_PIN, INPUT);
@@ -102,7 +102,7 @@ void loop() {
   digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
 
   // 데이터 수신이 있을때만
-  if ( digitalRead(TRIGGER_PIN) == LOW ) {
+//  if ( digitalRead(TRIGGER_PIN) == LOW ) {
     //  Serial.print("Sensor Read...");
     //  Serial.println(readCount + 1);
     if (readCount == 0) {
@@ -151,7 +151,7 @@ void loop() {
       }
     }
     serverUpdate();
-  }
+//  }
   delay(5000);
 }
 
