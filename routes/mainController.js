@@ -65,6 +65,7 @@ module.exports =(app,pm25VO)=>{
 	});
 	app.get("/pm25/dashboard",(req,res)=>{
 		pm25VO.find((err,data)=>{
+			res.status(200)
 			res.render("dashboard");
 		});
 	});

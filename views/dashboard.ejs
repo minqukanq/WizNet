@@ -26,7 +26,7 @@ th {
 <script>
 	$(document).ready(function() {
 		createGauges();
-		// updateGauges();
+		updateGauges();
 		setInterval(updateGauges, 10000);
 	})
 </script>
@@ -87,7 +87,6 @@ th {
 		createGauge("pm25_25", "미세(2.5): ㎍/㎥", 0, 100);
 		createGauge("pm25_10", "황사급(10): ㎍/㎥", 0, 150);
 		createGauge("ds_temp", "기온 ℃", 0, 50);
-		//createGauge("test", "Test", -50, 50 );
 	}
 
 	// 게이지 다시그리기
@@ -107,19 +106,6 @@ th {
 							data.PM25_DATE + ',' + data.PM25_TIME
 									+ ' 현재 미세먼지, 온도 현황');
 	
-					/*
-					$(".pm25_1").css("background-color","white")
-					$(".pm25_2").css("background-color","white")
-					$(".pm25_3").css("background-color","white")
-					$(".pm25_4").css("background-color","white")
-					
-					$(".pm10_1").css("background-color","white")
-					$(".pm10_2").css("background-color","white")
-					$(".pm10_3").css("background-color","white")
-					$(".pm10_4").css("background-color","white")
-					*/
-					
-					
 					if(data.PM25_25 < 16 ) $(".pm25_1").css("background-color","#33FF66");
 					else if(data.PM25_25 < 51 ) $(".pm25_2").css("background-color","#FFFF66");
 					else if(data.PM25_25 < 101 ) $(".pm25_3").css("background-color","#FF6633");
