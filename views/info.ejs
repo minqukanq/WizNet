@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <html>
-<% include ../public/include/mobileHeader.html %>
+<head>
+<% include ../public/include/mainHeader.html %>
+
 <style>
+body {
+	font: 10px arial;
+}
+
 tr, th, td {
 	border: 1px solid #d6d6d6;
 	vertical-align: middle;
@@ -12,23 +18,24 @@ th {
 }
 
 .t1 {
-	width: 50px;
+	width: 100px;
 }
 </style>
-
 </head>
 
 <body>
-	<div data-role="page" id="pageone">
-		<div data-role="header"><% include
-			../public/include/pageHeader.html %></div>
-		<div data-role="main" class="ui-content">
-			<% include info_tview.ejs %>
-			<% include info_sview.ejs %>
-			<p>&#42; 민감군 : 어린이, 노약자, 천식같은 폐질환 및 심장질환을 앓고 있는 어른</p>
-		</div>
-		<div data-role="footer"><% include
-			../public/include/pageFooter.html %></div>
-	</div>
+	<!-- Header -->
+	<% include ../public/include/pageHeader.html %>
+	<article class="w3-padding-15 w3-center">
+		<div class="w3-container"><% include info_tview.ejs %></div>
+	</article>
+	<article class="w3-padding-15 w3-center">
+		<div class="w3-container"><% include info_sview.ejs %></div>
+		<p>&#42; 민감군 : 어린이, 노약자, 천식같은 폐질환 및 심장질환을 앓고 있는 어른</p>
+	</article>
+	<br/><br/>
+	<footer  class="w3-container w3-blue w3-center">
+		<% include ../public/include/pageFooter.html %></div>
+	</footer>
 </body>
 </html>

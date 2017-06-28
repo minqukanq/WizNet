@@ -1,18 +1,17 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<% include ../public/include/mobileHeader.html %>
-<script src="/d3js/d3.min.js"></script>
-<script src="/d3js/gauge.js"></script>
+<% include ../public/include/mainHeader.html %>
 
 <style>
 body {
 	font: 10px arial;
 }
+
 tr, th, td {
 	border: 1px solid #d6d6d6;
 	vertical-align: middle;
-	background-color:white;
+	background-color: white;
 }
 
 th {
@@ -22,38 +21,49 @@ th {
 .t1 {
 	width: 50px;
 }
+
+#curTime {
+	color: whilte;
+	font-size:15px;
+}
 </style>
 <script>
-	$(document).ready(function() {
-		createGauges();
-		updateGauges();
-		setInterval(updateGauges, 10000);
-	})
+$(document).ready(()=>{
+
+	createGauges();
+	updateGauges();
+	setInterval(updateGauges, 10000);
+	
+})
 </script>
+<script src="/d3js/d3.min.js"></script>
+<script src="/d3js/gauge.js"></script>
 </head>
 <body>
-	<div data-role="page" id="pageone">
-		<div data-role="header">
-			<% include	../public/include/pageHeader.html %>
+
+	<!-- Header -->
+	<% include ../public/include/pageHeader.html %>
+
+	<article>
+		<div class="w3-row">
+			<br/>
+			<button class="w3-button w3-block w3-light-grey" id='curTime'><h3>현재시각미세먼지</h3></button>
+			<br/>
 		</div>
-		<div data-role="main" class="ui-content">
-			<div class="row">
-				<div class="col-md-12">
-				 <button class="ui-btn" id='curTime'>현재시각 미세먼지</button>
-				</div>
-			</div>
-			<div class="row">
-				<span class="col-md-3" id="pm25_01GaugeContainer"></span> 
-				<span class="col-md-3" id="pm25_25GaugeContainer"></span>
-				<span class="col-md-3" id="pm25_10GaugeContainer"></span>
-				<span class="col-md-3" id="ds_tempGaugeContainer"></span>
-			</div>
+		<div class="w3-row w3-center">
+			<span class="w3-col m3 l3" id="pm25_01GaugeContainer"></span>
+			<span class="w3-col m3 l3" id="pm25_25GaugeContainer"></span>
+			<span class="w3-col m3 l3" id="pm25_10GaugeContainer"></span>
+			<span class="w3-col m3 l3" id="ds_tempGaugeContainer"></span>
 		</div>
-		<div class="container-fluid">
-		<% include info_tview.ejs %>
-		</div>
-		<div data-role="footer"><% include ../public/include/pageFooter.html %></div>
-	</div>
+	</article>
+	<article class="w3-padding-15 w3-center">
+		<div class="w3-container"><% include info_tview.ejs %></div>
+	</article>
+	<br/><br/>
+	<footer  class="w3-container w3-blue w3-center">
+		<% include ../public/include/pageFooter.html %></div>
+	</footer>
 </body>
 
 <script>
@@ -105,17 +115,25 @@ th {
 					$(curTime).text(
 							data.PM25_DATE + ',' + data.PM25_TIME
 									+ ' 현재 미세먼지, 온도 현황');
-	
-					if(data.PM25_25 < 16 ) $(".pm25_1").css("background-color","#33FF66");
-					else if(data.PM25_25 < 51 ) $(".pm25_2").css("background-color","#FFFF66");
-					else if(data.PM25_25 < 101 ) $(".pm25_3").css("background-color","#FF6633");
-					else $(".pm25_4").css("background-color","red");
 
-					if(data.PM25_10 < 31 ) $(".pm10_1").css("background-color","#33FF66");
-					else if(data.PM25_10 < 81 ) $(".pm10_2").css("background-color","#FFFF66");
-					else if(data.PM25_10 < 151 ) $(".pm10_3").css("background-color","#FF6633");
-					else $(".pm10_4").css("background-color","red");
-					
+					if (data.PM25_25 < 16)
+						$(".pm25_1").css("background-color", "#33FF66");
+					else if (data.PM25_25 < 51)
+						$(".pm25_2").css("background-color", "#FFFF66");
+					else if (data.PM25_25 < 101)
+						$(".pm25_3").css("background-color", "#FF6633");
+					else
+						$(".pm25_4").css("background-color", "red");
+
+					if (data.PM25_10 < 31)
+						$(".pm10_1").css("background-color", "#33FF66");
+					else if (data.PM25_10 < 81)
+						$(".pm10_2").css("background-color", "#FFFF66");
+					else if (data.PM25_10 < 151)
+						$(".pm10_3").css("background-color", "#FF6633");
+					else
+						$(".pm10_4").css("background-color", "red");
+
 				}
 			}
 		})

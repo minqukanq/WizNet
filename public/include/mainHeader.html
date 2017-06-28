@@ -1,13 +1,20 @@
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>▥ ▥ ▥ 행복한 Iot 세상 - 미세먼지 검출 시스템 ▥ ▥ ▥</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="UTF-8">
-<!-- jQuery library -->
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<!-- Latest compiled JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<title>행복한 Iot 세상</title>
-</head>
+<script>
+$(document).ready(function() {
+	$("#dashboard").click(()=>{
+		location.href="/pm25/dashboard";
+	})
+	$("#pmlist").click(()=>{
+		location.href="/pm25/pmlist";
+	})
+	$("#getinfo").click(()=>{
+		location.href="/pm25/getinfo";
+	})
+})
+</script>
 
 

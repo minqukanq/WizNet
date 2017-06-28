@@ -1,57 +1,86 @@
 <!DOCTYPE html>
 <html>
-<% include ../public/include/mobileHeader.html %>
-<script>
-$(document).ready(function(){
-	$("#search").click(function(){
-		// alert($("#searchdate").val());
-		getList();
-	});
-	var date = new Date();
-    var year  = date.getFullYear();
-    var month = date.getMonth() + 1; // 0부터 시작하므로 1더함 더함
-    var day   = date.getDate();
+<head>
+<% include ../public/include/mainHeader.html %>
 
-    if (("" + month).length == 1) { month = "0" + month; }
-    if (("" + day).length   == 1) { day   = "0" + day;   }
-	$("#searchdate").val(year+"-"+month+"-"+day);
-	getList();
-
-});
-
-function getList(){
-	var searchdate = $("#searchdate").val();
-	$.ajax({
-		type : 'GET',
-		url : '/pm25/getlist',
-		data : {searchdate:searchdate},
-		dataType : 'text',
-		success : function(data) {
-			$("#listbody").html(data);
-		}
-	})	
+<style>
+body {
+	font: 10px arial;
 }
 
+tr, th, td {
+	border: 1px solid #d6d6d6;
+	vertical-align: middle;
+	background-color: white;
+}
+</style>
+<script>
+	$(document).ready(function() {
+		$("#search").click(function() {
+			// alert($("#searchdate").val());
+			getList();
+		});
+		var date = new Date();
+		var year = date.getFullYear();
+		var month = date.getMonth() + 1; // 0부터 시작하므로 1더함 더함
+		var day = date.getDate();
+
+		if (("" + month).length == 1) {
+			month = "0" + month;
+		}
+		if (("" + day).length == 1) {
+			day = "0" + day;
+		}
+		$("#searchdate").val(year + "-" + month + "-" + day);
+		getList();
+
+	});
+
+	function getList() {
+		var searchdate = $("#searchdate").val();
+		$.ajax({
+			type : 'GET',
+			url : '/pm25/getlist',
+			data : {
+				searchdate : searchdate
+			},
+			dataType : 'text',
+			success : function(data) {
+				$("#listbody").html(data);
+			}
+		})
+	}
 </script>
+
 </head>
 <body>
-	<div data-role="page" id="pageone">
-		<div data-role="header"><% include
-			../public/include/pageHeader.html %></div>
-		<div data-role="main" class="ui-content">
-			<div class='row'>
-				<div class="col-md-3"><input type="date" name="searchdate" id="searchdate"></div>
-				<div class="col-md-3"><button type="button" class="btn btn-primary" id="search">
-				<span class="glyphicon glyphicon-search"></span>검색</button></div>
+	<!-- Header -->
+	<% include ../public/include/pageHeader.html %>
+	<article class="w3-padding-16">
+		<div class="w3-row w3-container w3-margin-10">
+			<div class="w3-col s1"></div>
+			<div class="w3-col l3">
+				<input type="date" class="w3-input w3-border" name="searchdate"
+					id="searchdate">
 			</div>
-			<hr/>
-			<div class='row'>
-				<div id='listbody'><h4>데이터 로딩에 다소 시간이 소요됩니다. 잠시만 기다리세요</h3></div>
+			<div class="w3-col l3 w3-container w3-margin-10 ">
+			<button class="w3-button w3-khaki w3-round-xlarge" id="search">
+				검색
 			</div>
-			
 		</div>
-		<div data-role="footer"><% include
-			../public/include/pageFooter.html %></div>
-	</div>
+		<hr />
+		<div class='w3-row  w3-container w3-margin-10'>
+			<div class="w3-col l12" id="listbody">
+					<h4>
+						데이터 로딩에 다소 시간이 소요됩니다. 잠시만 기다리세요
+						</h4>
+			</div>
+		</div>
+	</article>
+	<br />
+	<br />
+	<footer class="w3-container w3-blue w3-center">
+		<% include ../public/include/pageFooter.html %>
+	</footer>
 </body>
 </html>
