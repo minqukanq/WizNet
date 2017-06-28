@@ -64,9 +64,7 @@ module.exports =(app,pm25VO)=>{
 		});
 	});
 	app.get("/pm25/dashboard",(req,res)=>{
-		pm25VO.find((err,data)=>{
-			res.render("dashboard");
-		});
+		res.render("dashboard");
 	});
 	app.get("/pm25/getlast",(req,res)=>{
 
@@ -93,15 +91,15 @@ module.exports =(app,pm25VO)=>{
 	
 	app.post("/pm25/getlast",(req,res)=>{
 
-//		Date.prototype.yyyymmdd = function(){
-//		    var yyyy = this.getFullYear().toString();
-//		    var mm = (this.getMonth() + 1).toString();
-//		    var dd = this.getDate().toString();
-//		    return yyyy +"-"+(mm[1] ? mm : '0'+mm[0])+"-"+(dd[1] ? dd : '0'+dd[0]);
-//		};
+// Date.prototype.yyyymmdd = function(){
+// var yyyy = this.getFullYear().toString();
+// var mm = (this.getMonth() + 1).toString();
+// var dd = this.getDate().toString();
+// return yyyy +"-"+(mm[1] ? mm : '0'+mm[0])+"-"+(dd[1] ? dd : '0'+dd[0]);
+// };
 //		 
-//		var nowDate = (new Date).yyyymmdd();
-//		console.log(nowDate);
+// var nowDate = (new Date).yyyymmdd();
+// console.log(nowDate);
 
 		pm25VO.findOne()
 			.sort({PM25_DATE:-1})
