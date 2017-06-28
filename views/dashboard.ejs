@@ -29,17 +29,11 @@ th {
 </style>
 <script>
 $(document).ready(()=>{
-
-	// createGauges();
-	// updateGauges();
-	setInterval(function(){
-		if(!boolCreate) createGauges();
-		updateGauges}
-	, 10000);
+	createGauges();
+	updateGauges();
+	setInterval(updateGauges,10000);
 })
 </script>
-<script src="/d3js/d3.min.js"></script>
-<script src="/d3js/gauge.js"></script>
 </head>
 <body>
 
@@ -67,7 +61,6 @@ $(document).ready(()=>{
 		<% include ../public/include/pageFooter.html %></div>
 	</footer>
 </body>
-
 <script>
 	var gauges = [];
 	var boolCreate = false ;
@@ -144,5 +137,6 @@ $(document).ready(()=>{
 		})
 	}
 </script>
-
+<script src="/d3js/d3.min.js"></script>
+<script src="/d3js/gauge.js"></script>
 </html>
