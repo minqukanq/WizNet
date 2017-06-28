@@ -30,10 +30,12 @@ th {
 <script>
 $(document).ready(()=>{
 
-	createGauges();
-	updateGauges();
-	setInterval(updateGauges, 10000);
-	
+	// createGauges();
+	// updateGauges();
+	setInterval(function(){
+		if(!boolCreate) createGauges();
+		updateGauges}
+	, 10000);
 })
 </script>
 <script src="/d3js/d3.min.js"></script>
@@ -68,7 +70,7 @@ $(document).ready(()=>{
 
 <script>
 	var gauges = [];
-
+	var boolCreate = false ;
 	function createGauge(name, label, min, max) {
 		var config = {
 			size : 220,
@@ -90,6 +92,7 @@ $(document).ready(()=>{
 
 		gauges[name] = new Gauge(name + "GaugeContainer", config);
 		gauges[name].render();
+		
 	}
 
 	function createGauges() {
@@ -97,6 +100,8 @@ $(document).ready(()=>{
 		createGauge("pm25_25", "미세(2.5): ㎍/㎥", 0, 100);
 		createGauge("pm25_10", "황사급(10): ㎍/㎥", 0, 150);
 		createGauge("ds_temp", "기온 ℃", 0, 50);
+		
+		boolCreate = true;
 	}
 
 	// 게이지 다시그리기
