@@ -114,6 +114,13 @@ $(document).ready( ()=>{
 							data.PM25_DATE + ',' + data.PM25_TIME
 									+ ' 현재 미세먼지, 온도 현황');
 
+					// 배경색 초기화
+					$(".pm25_1").css("background-color", "white");
+					$(".pm25_2").css("background-color", "white");
+					$(".pm25_3").css("background-color", "white");
+					$(".pm25_4").css("background-color", "white");
+					
+					// 측정 값에 따라 배경색 선택
 					if (data.PM25_25 < 16)
 						$(".pm25_1").css("background-color", "#33FF66");
 					else if (data.PM25_25 < 51)
