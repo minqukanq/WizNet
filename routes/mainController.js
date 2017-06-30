@@ -110,7 +110,7 @@ module.exports =(app,pm25VO)=>{
 		});
 	})
 	
-	app.get("/pm25/getlist",(req,res)=>{
+	app.get("/pm25/allist",(req,res)=>{
 		pm25VO.find((err,data)=>{
 			res.json(data);
 		})
