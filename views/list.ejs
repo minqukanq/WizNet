@@ -37,6 +37,8 @@ tr, th, td {
 	});
 
 	function getList() {
+		$("#listbody").html("<h3 class='w3-bold'><i class='fa fa-quote-right w3-xxlarge w3-opacity'>"
+				+"데이터 로딩에 다소 시간이 소요됩니다. 잠시만 기다리세요</i></h4>");
 		var searchdate = $("#searchdate").val();
 		$.ajax({
 			type : 'GET',
@@ -71,9 +73,6 @@ tr, th, td {
 		<hr />
 		<div class='w3-row  w3-container w3-margin-10'>
 			<div class="w3-col l12" id="listbody">
-					<h4>
-						데이터 로딩에 다소 시간이 소요됩니다. 잠시만 기다리세요
-						</h4>
 			</div>
 		</div>
 	</article>
