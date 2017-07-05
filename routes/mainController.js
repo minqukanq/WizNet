@@ -32,30 +32,31 @@ module.exports =(app,pm25VO)=>{
     app.get('/pm25/chart/:getDate',(req,res)=>{
 //    	console.log(req.body.getDate);
     	var searchdate = req.params.getDate; // ajax에서 넘긴 데이터는 query로 받는다
-    	pm25VO.find({PM25_DATE:searchdate},
-    			(err,data)=>{
+    	pm25VO.find({PM25_DATE:searchdate})
+//    	.limit(10)
+    	.exec((err,data)=>{
 //    				res.json(data)
-    				/**
-    				 * javascript.map() 
-    				 * 배열이나, json 등 object list 데이터를 순회하면서
-    				 * map(key,value) 형태로 돌려 준다.
-    				 */
-    				var oldTime = '';
-    				var datas = data.map(function(d){
-    					if(oldTime != d.PM25_TIME.substring(0,5)) {
-        					return{
-        						times:d.PM25_TIME,
-        						pm25_01:d.PM25_01,
-        						pm25_25:d.PM25_25,
-        						pm25_10:d.PM25_10,
-        						ds_temp:d.DS_TEMP
-        					}
-    					}
-    					oldTime = d.PM25_TIME.substring(0,5);
-//    					console.log(oldTime)
-    				})
-    				console.log(datas);
-    			})
+    		
+    			/**
+    			 * javaScript의 filter Method를 이용해서 10분 단위로 데이터를 필터링한다.
+    			 */
+    			var oldTime = '';
+    			var newData = data.filter(function(item){
+    				var newTime =  item.PM25_TIME.substring(0,2)+item.PM25_TIME.substring(3,4)
+    				if(oldTime != newTime) {
+    					oldTime = newTime;
+    					item.PM25_TIME = newTime+'0'
+//    					item.PM25_TIME = item.PM25_TIME
+    					return item;	
+    				}
+    				
+    			});  
+//    			console.log(newArr);
+//    			var a1 = [1, 2, 3, 4, 5, 6]
+//    			newData.slice(3).map(function(id){console.log(id)})
+    			res.json(newData)
+    		
+    	})
     })
     
     
@@ -70,7 +71,17 @@ module.exports =(app,pm25VO)=>{
                 .sort({PM25_DATE:-1})
                 .sort({PM25_TIME:-1})
                 .exec(function(err,data){
-                	res.render("listbody",{list:data,title:"/pm25/list"});
+        			var oldTime = '';
+        			var newData = data.filter(function(item){
+        				if(oldTime != item.PM25_TIME.substring(0,4)) {
+        					console.log(oldTime)
+        					oldTime = item.PM25_TIME.substring(0,4);
+        					return item;	
+        				}
+        			});  
+
+                	
+                	res.render("listbody",{list:newData,title:"/pm25/list"});
                 });
     });
     
