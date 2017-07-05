@@ -27,7 +27,7 @@
 			</section>>
 		</section>>
 	</article>
-	<article class='w3-container w3-light-gray'>
+	<article class='w3-container w3-light-gray' id='chartArea'>
 		<svg width="1200" height="450"></svg>
 	</article>
 	<br>
@@ -52,13 +52,19 @@ $(document).ready(function(){
 	}
 	var getDate = year + "-" + month + "-" + day;
 	$("#searchdate").val(getDate);
-
 	chartDraw();
+	
+	$("#search").click(function() {
+		d3.select("svg").remove(); 
+		var svg = d3.select("body").append("svg").attr("width","1200").attr("height", "500"),
+		inner = svg.append("g");
+		chartDraw();
+	});
 })
 </script>
 <script src="//d3js.org/d3.v4.min.js"></script>
 <script>
-	
+function chartDraw(){
 	var svg = d3.select("svg"), margin = {
 		top : 20,
 		right : 80,
@@ -79,7 +85,7 @@ $(document).ready(function(){
 				 .y(function(d) { return y(d.pm25_value);
 	});
 	
-	function chartDraw(){
+
 		// d3.json('/pm25/chart/2017-06-15',function(error,data){$('#msg').text(data.map(function(d){return d.PM25_TIME}))})
 		d3.json('/pm25/chart/'+$('#searchdate').val(), function(error, pm25_result) {
 			
@@ -103,7 +109,6 @@ $(document).ready(function(){
 				
 			});
 			
-			
 			// $('#msg').text(d3.extent(pmdata,function(d) { return d.PM25_TIME }))
 			  
 			// x 축에 표시할 데이터
@@ -116,8 +121,6 @@ $(document).ready(function(){
 		    d3.min(pm25_d3_data, function(c) { return d3.min(c.values, function(d) { return d.pm25_value; }); }),
 		    d3.max(pm25_d3_data, function(c) { return d3.max(c.values, function(d) { return d.pm25_value; }); })
 		  ])
-	 	
-		  
 		  z.domain(pm25_d3_data.map(function(c) { return c.id; }));
 	
 			g.append("g")
