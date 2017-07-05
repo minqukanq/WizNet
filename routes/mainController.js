@@ -32,6 +32,8 @@ module.exports =(app,pm25VO)=>{
     app.get('/pm25/chart/:getDate',(req,res)=>{
 //    	console.log(req.body.getDate);
     	var searchdate = req.params.getDate; // ajax에서 넘긴 데이터는 query로 받는다
+//    	console.log(searchdate)
+    	
     	pm25VO.find({PM25_DATE:searchdate})
 //    	.limit(10)
     	.exec((err,data)=>{
@@ -45,7 +47,9 @@ module.exports =(app,pm25VO)=>{
     				var newTime =  item.PM25_TIME.substring(0,2)+item.PM25_TIME.substring(3,4)
     				if(oldTime != newTime) {
     					oldTime = newTime;
-    					item.PM25_TIME = newTime+'0'
+    					item.PM25_TIME = new Date(item.PM25_DATE +' ' + item.PM25_TIME).getTime()
+    					console.log(new Date(item.PM25_TIME))
+    					
 //    					item.PM25_TIME = item.PM25_TIME
     					return item;	
     				}
