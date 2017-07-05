@@ -1,19 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<% include ../public/include/mainHeader.html %>
-
-<style>
-body {
-	font: 10px arial;
-}
-
-tr, th, td {
-	border: 1px solid #d6d6d6;
-	vertical-align: middle;
-	background-color: white;
-}
-</style>
+<% include include/mainHeader.ejs %>
 <script>
 	$(document).ready(function() {
 		$("#search").click(function() {
@@ -39,17 +27,9 @@ tr, th, td {
 	function getList() {
 		$("#listbody").html("<h3 class='w3-bold'><i class='fa fa-quote-right w3-xxlarge w3-opacity'>"
 				+"데이터 로딩에 다소 시간이 소요됩니다. 잠시만 기다리세요</i></h4>");
-		var searchdate = $("#searchdate").val();
-		$.ajax({
-			type : 'GET',
-			url : '/pm25/getlist',
-			data : {
-				searchdate : searchdate
-			},
-			dataType : 'text',
-			success : function(data) {
-				$("#listbody").html(data);
-			}
+		var getDate = $("#searchdate").val();
+		$.post('/pm25/getlist',{getDate:getDate},function(result){
+				$("#listbody").html(result);
 		})
 	}
 </script>
@@ -57,7 +37,7 @@ tr, th, td {
 </head>
 <body>
 	<!-- Header -->
-	<% include ../public/include/pageHeader.html %>
+	<% include include/pageHeader.ejs %>
 	<article class="w3-padding-16">
 		<div class="w3-row w3-container w3-margin-10">
 			<div class="w3-col s1"></div>
@@ -78,8 +58,9 @@ tr, th, td {
 	</article>
 	<br />
 	<br />
-	<footer class="w3-container w3-blue w3-center">
-		<% include ../public/include/pageFooter.html %>
+	<footer  class="w3-container w3-blue w3-center">
+		<% include include/pageFooter.ejs %>
 	</footer>
+
 </body>
 </html>

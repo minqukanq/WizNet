@@ -1,34 +1,9 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<% include ../public/include/mainHeader.html %>
-
-<style>
-body {
-	font: 10px arial;
-}
-
-tr, th, td {
-	border: 1px solid #d6d6d6;
-	vertical-align: middle;
-	background-color: white;
-}
-
-th {
-	text-align: center;
-}
-
-.t1 {
-	width: 50px;
-}
-
-#curTime {
-	color: whilte;
-	font-size:15px;
-}
-</style>
+<% include include/mainHeader.ejs %>
 <script>
-$(document).ready( ()=>{
+$(document).ready( function(){
 	createGauges();
 	updateGauges();
 	setInterval(updateGauges,10000);
@@ -38,7 +13,7 @@ $(document).ready( ()=>{
 <body>
 
 	<!-- Header -->
-	<% include ../public/include/pageHeader.html %>
+	<% include include/pageHeader.ejs %>
 
 	<article>
 		<div class="w3-row">
@@ -58,8 +33,9 @@ $(document).ready( ()=>{
 	</article>
 	<br/><br/>
 	<footer  class="w3-container w3-blue w3-center">
-		<% include ../public/include/pageFooter.html %></div>
+		<% include include/pageFooter.ejs %>
 	</footer>
+
 </body>
 <script>
 	var gauges = [];

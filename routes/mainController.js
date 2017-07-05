@@ -1,10 +1,4 @@
 module.exports =(app,pm25VO)=>{
-	app.get("/wifi/:msg",(req,res)=>{
-		console.log(req.params.msg) ;
-		res.status(200);
-		res.end("")
-	})
-	
 	/*
 	 * 아두이노에서 서버에 데이터 insert 요청
 	 * PM25_NO : String, PM25_DATE : String, PM25_TIME : String, PM25_01 :
@@ -29,28 +23,48 @@ module.exports =(app,pm25VO)=>{
 				res.send('ok');
 			});
 		}
-		
-		// res.status(200);
-		// res.write(req_ip+"\n");
-		// res.write(req.params.PM25_DATE+"\n");
-		// res.write(req.params.PM25_TIME+"\n");
-		// res.write(req.params.PM25_01+"\n");
-		// res.write(req.params.PM25_10+"\n");
-		// res.write(req.params.PM25_25+"\n");
-		// res.end(req.params.DS_TEMP+"\n");
-
 	});
 	
     app.get("/pm25/pmlist",(req,res)=>{
          res.render("list");
     });
 
+    app.get('/pm25/chart/:getDate',(req,res)=>{
+//    	console.log(req.body.getDate);
+    	var searchdate = req.params.getDate; // ajax에서 넘긴 데이터는 query로 받는다
+    	pm25VO.find({PM25_DATE:searchdate},
+    			(err,data)=>{
+//    				res.json(data)
+    				/**
+    				 * javascript.map() 
+    				 * 배열이나, json 등 object list 데이터를 순회하면서
+    				 * map(key,value) 형태로 돌려 준다.
+    				 */
+    				var oldTime = '';
+    				var datas = data.map(function(d){
+    					if(oldTime != d.PM25_TIME.substring(0,5)) {
+        					return{
+        						times:d.PM25_TIME,
+        						pm25_01:d.PM25_01,
+        						pm25_25:d.PM25_25,
+        						pm25_10:d.PM25_10,
+        						ds_temp:d.DS_TEMP
+        					}
+    					}
+    					oldTime = d.PM25_TIME.substring(0,5);
+//    					console.log(oldTime)
+    				})
+    				console.log(datas);
+    			})
+    })
+    
+    
     // Ajax에서 조회할 리스트 데이터
     // 날짜값을 인자로 받아서 조회한다.
-    app.get("/pm25/getlist",(req,res)=>{
+    app.post("/pm25/getlist",(req,res)=>{
     	
-    	console.log(req.query.searchdate);
-    	var searchdate = req.query.searchdate; // ajax에서 넘긴 데이터는 query로 받는다
+    	console.log(req.body.getDate);
+    	var searchdate = req.body.getDate; // ajax에서 넘긴 데이터는 query로 받는다
         pm25VO
                 .find({PM25_DATE:searchdate})
                 .sort({PM25_DATE:-1})
@@ -60,14 +74,6 @@ module.exports =(app,pm25VO)=>{
                 });
     });
     
-	/*
-    app.get("/pm25/monthview",(req,res)=>{
-		pm25VO.find((err,data)=>{
-			res.render("monthview");
-		});
-	});
-	*/
-	
     // dashboard 페이지 로딩
 	app.get("/pm25/dashboard",(req,res)=>{
 		res.render("dashboard");
@@ -131,6 +137,11 @@ module.exports =(app,pm25VO)=>{
 		})
 	})
 	*/
+	
+	// 라인 그래프 
+	app.get('/pm25/linechart',(req,res)=>{
+		res.render('line_chart')
+	})
 	
 	// 정보보기 페이지 로딩
 	app.get("/pm25/getinfo",(req,res)=>{
