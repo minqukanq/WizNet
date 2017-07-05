@@ -133,9 +133,9 @@ function chartDraw(){
 			.call(d3.axisBottom(x).tickFormat(function(d){
 				var date = new Date(d)
 				var hours = date.getHours();
-				hours = (""+hours.length) < 2 ? "0" + hours : ""+hours
+				hours = ((""+hours).length) < 2 ? "0" + hours : ""+hours
 				var minute = date.getMinutes();
-				minute = (""+minute.length) < 2  ? "0" + minute : ""+minute
+				minute = ((""+minute).length) < 2  ? "0" + minute : ""+minute
 				return hours +':'+ minute;
 			}));
 		
