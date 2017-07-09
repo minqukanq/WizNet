@@ -28,16 +28,17 @@ module.exports =(app,pm25VO)=>{
     app.get("/pm25/pmlist",(req,res)=>{
          res.render("list");
     });
+    
+    // 라인 그래프 
+    app.get('/pm25/linechart',(req,res)=>{
+        res.render('line_chart')
+    })
 
     app.get('/pm25/chart/:getDate',(req,res)=>{
-//    	console.log(req.body.getDate);
     	var searchdate = req.params.getDate; // ajax에서 넘긴 데이터는 query로 받는다
-//    	console.log(searchdate)
     	
     	pm25VO.find({PM25_DATE:searchdate})
-//    	.limit(10)
     	.exec((err,data)=>{
-//    				res.json(data)
     		
     			/**
     			 * javaScript의 filter Method를 이용해서 10분 단위로 데이터를 필터링한다.
@@ -48,7 +49,7 @@ module.exports =(app,pm25VO)=>{
     				if(oldTime != newTime) {
     					oldTime = newTime;
     					item.PM25_TIME = new Date(item.PM25_DATE +' ' + item.PM25_TIME).getTime()
-    					console.log(new Date(item.PM25_TIME))
+    					console.log(new Date('시간값'+item.PM25_TIME))
     					
 //    					item.PM25_TIME = item.PM25_TIME
     					return item;	
@@ -153,10 +154,7 @@ module.exports =(app,pm25VO)=>{
 	})
 	*/
 	
-	// 라인 그래프 
-	app.get('/pm25/linechart',(req,res)=>{
-		res.render('line_chart')
-	})
+
 	
 	// 정보보기 페이지 로딩
 	app.get("/pm25/getinfo",(req,res)=>{

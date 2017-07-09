@@ -11,20 +11,31 @@
 	stroke-width: 1.5px;
 }
 </style>
-<script src="//d3js.org/d3.v4.js"></script>
+<script src="http://d3js.org/d3.v4.js"></script>
+<script src='/js/chart_event.js'></script>
 <body>
 	<% include include/pageHeader.ejs %>
 	<article>
-		<section class="w3-row w3-container w3-margin-10">
-			<section class="w3-col s1"></section>
-			<section class="w3-col l3">
-				<input type="date" class="w3-input w3-border" name="searchdate"
-					id="searchdate">
-			</section>
-			<section class="w3-col l3 w3-container w3-margin-10 ">
-			<button class="w3-button w3-khaki w3-round-xlarge" id="search">
+		<section class="w3-container">
+			<section class='w3-col l3 s3 m3'>
+				<input type="date" class="w3-input w3-border w3-col l6 m6 s6 w3-margin" name="searchdate" id="searchdate">
+				<button class="w3-button w3-khaki w3-margin" id="searchBtn">
 				검색
-			</button>
+				</button>
+			</section>
+			<section class="w3-col l5 s3 m5 w3-light-gray">
+				<input type='checkbox' checked="checked" name='PM25' id='PM25_01' value='PM25_01' class="w3-check w3-margin">
+				<label class='w3-large'>PM 0.1</label>
+
+				<input type='checkbox' checked="checked" name='PM25' id='PM25_25' value='PM25_25' class="w3-check w3-margin">
+				<label class='w3-large'>PM 25</label>
+
+				<input type='checkbox' checked="checked" name='PM25' id='PM25_10' value='PM25_10' class="w3-check w3-margin">
+				<label class='w3-large'>PM 10</label>
+
+				<input type='checkbox' name='PM25' id=DS_TEMP value='DS_TEMP' class="w3-check w3-margin">
+				<label class='w3-large'>기온</label>
+
 			</section>
 		</section>
 	</article>
@@ -39,142 +50,3 @@
 
 </body>
 
-<script>
-$(document).ready(function(){
-	var date = new Date();
-	var year = date.getFullYear();
-	var month = date.getMonth() + 1; // 0부터 시작하므로 1더함 더함
-	var day = date.getDate();
-
-	if (("" + month).length == 1) {
-		month = "0" + month;
-	}
-	if (("" + day).length == 1) {
-		day = "0" + day;
-	}
-	var getDate = year + "-" + month + "-" + day;
-	$("#searchdate").val(getDate);
-	chartDraw();
-	
-	$("#search").click(function() {
-		
-		// 이미 그려진 그래프 삭제하고 새로운 영역 설정
-		d3.select("svg").remove(); 
-		var svg = d3.select('#chartArea').append("svg").attr("width","1200").attr("height", "500"),
-		inner = svg.append("g");
-		
-		// 차트 다시 그리기
-		chartDraw();
-	});
-})
-</script>
-
-<script>
-function chartDraw(){
-	var svg = d3.select("svg"), margin = {
-		top : 20,
-		right : 80,
-		bottom : 60,
-		left : 50
-	}, width = svg.attr("width") - margin.left - margin.right, 
-		height = svg.attr("height") - margin.top - margin.bottom, 
-		g = svg.append("g").attr("transform",	"translate(" + margin.left + "," + margin.top + ")");
-
-	var x = d3.scaleTime().range([ 0, width ]), 
-		y = d3.scaleLinear().range([ height, 0 ]), 
-		z = d3.scaleOrdinal(d3.schemeCategory10);
-
-	var line = d3.line().curve(d3.curveBasis)
-				 .x(function(d) { return x(d.time); })
-				 .y(function(d) { return y(d.pm25_value);
-	});
-	
-
-	// d3.json('/pm25/chart/2017-06-15',function(error,data){$('#msg').text(data.map(function(d){return d.PM25_TIME}))})
-	d3.json('/pm25/chart/'+$('#searchdate').val(), function(error, pm25_result) {
-		
-		if (error) throw error;
-		
-		var pm25_name = ['PM25_01','PM25_25','PM25_10'];
-		var pm25_title = {'PM25_01':'PM 0.1㎛, ㎍','PM25_25':'PM 2.5㎛, ㎍','PM25_10':'PM 10㎛, ㎍','DS_TEMP':'기온, ℃'}
-			
-		
-		// 3개의 그래프를 그리기 위한 데이터 구조 생성
-		var pm25_d3_data = pm25_name.map(function(id) {
-			// $('#msg').text($('#msg').text()+":"+pm25_title[id] )
-			
-			 return {
-			      id: id,
-			      title:pm25_title[id],
-			      values: pm25_result.map(function(d) {
-			    	  return {time:d.PM25_TIME, pm25_value: d[id]};
-			      })
-			 };
-			
-		});
-		
-		// $('#msg').text(d3.extent(pmdata,function(d) { return d.PM25_TIME }))
-		  
-		// x 축에 표시할 데이터
-		x.domain(d3.extent(pm25_result, function(d) { return d.PM25_TIME}));
-
-		// y 축 최소값과 최대값 지정
-//		y.domain(d3.extent(pmdata, function(d) { return d.PM25_01 }))
-
-	  y.domain([
-	    d3.min(pm25_d3_data, function(c) { return d3.min(c.values, function(d) { return d.pm25_value; }); }),
-	    d3.max(pm25_d3_data, function(c) { return d3.max(c.values, function(d) { return d.pm25_value; }); })
-	  ])
-	  z.domain(pm25_d3_data.map(function(c) { return c.id; }));
-
-		g.append("g")
-			.attr("class", "axis axis--x")
-			.attr("transform","translate(0," + height + ")")
-			.call(d3.axisBottom(x).tickFormat(function(d){
-				var date = new Date(d)
-				var hours = date.getHours();
-				hours = ((""+hours).length) < 2 ? "0" + hours : ""+hours
-				var minute = date.getMinutes();
-				minute = ((""+minute).length) < 2  ? "0" + minute : ""+minute
-				return hours +':'+ minute;
-			}));
-		
-		svg.append("text")             
-			      .attr("transform",
-			            "translate(" + (width/2) + " ," + 
-			                           (height + margin.top + 50) + ")")
-			      .style("text-anchor", "middle")
-			      .style("font","15px Gulim")
-			      .text("측정시각");
-
-		g.append("g")
-			.attr("class", "axis axis--y")
-			.call(d3.axisLeft(y))
-			
-		svg.append("text")
-			    .attr("transform",
-			            "rotate(-90) translate(-150," + (20) + ")")
-				.attr("y", 6)
-				.style("font","15px sans-serif")
-				.text("먼지농도");
-
-		var pm25View = g.selectAll(".PM25")
-					.data(pm25_d3_data).enter().append("g")
-					.attr("class", "PM25");
-
-		pm25View.append("path")
-				.attr("class", "line")
-				.attr("d", function(d) {return line(d.values)})
-				.style("stroke", function(d) {return z(d.id)});
-		
-		pm25View.append("text")
-		.datum(function(d) { return {id: d.id,title:d.title, value: d.values[d.values.length - 1]}; })
-		.attr("transform",function(d) {return "translate(" + x(d.value.time) + "," + y(d.value.pm25_value) + ")"})
-			.attr("x", 3)
-			.attr("dy", "0.35em")
-			.style("font","12px sans-serif")
-			.text(function(d) {	return d.title});
-		
-	});
-}
-</script>
